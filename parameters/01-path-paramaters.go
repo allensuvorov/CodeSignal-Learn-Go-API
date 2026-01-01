@@ -21,7 +21,9 @@ func main() {
     if err != nil {
         log.Fatalf("Error fetching the todo with path parameter: %v", err)
     }
-    
+
+    defer resp.Body.Close()
+
     // - If successful (status code 200), print the todo item
     if resp.StatusCode == http.StatusOK {
         data, err := io.ReadAll(resp.Body)
