@@ -27,20 +27,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to send POST request: %v", err)
 	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalf("Failed to read response body: %v", err)
+	}
 
 	// Check if the request was successful
 	if resp.StatusCode == http.StatusCreated {
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatalf("Failed to read response body: %v", err)
-		}
 		fmt.Println("New todo added successfully!")
 		fmt.Println(string(body))
 	} else {
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatalf("Failed to read error response body: %v", err)
-		}
 		fmt.Printf("Failed to add a new todo\nStatus Code: %d\nError Details: %s\n", resp.StatusCode, string(body))
 	}
 }

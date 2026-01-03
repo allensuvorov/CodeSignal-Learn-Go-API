@@ -14,18 +14,15 @@ func main() {
 
 	// New todo data structured as JSON string
 	jsonBody := `{
-        "title": "Learn Go http package",
+        "title": "Learn Go http requests",
         "description": "Complete a course on Go API calls.",
         "done": false
     }`
 
-	// Complete endpoint URL
-	endpoint := baseURL + "/todos"
-
-	// Create a new GET request (this is incorrect)
-	resp, err := http.Post(endpoint, "application/json", bytes.NewBufferString(jsonBody))
+	// Send POST request
+	resp, err := http.Post(baseURL+"/todos", "application/json", bytes.NewBufferString(jsonBody))
 	if err != nil {
-		log.Fatalf("Failed to create request: %v", err)
+		log.Fatalf("Failed to send POST request: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -34,11 +31,18 @@ func main() {
 		log.Fatalf("Failed to read response body: %v", err)
 	}
 
-	// Check if the request was successful (incorrect status code check)
+	// Check if the request was successful
 	if resp.StatusCode == http.StatusCreated {
 		fmt.Println("New todo added successfully!")
 		fmt.Println(string(body))
+
+		// TODO: Perform a GET request
+
+		// resp2, err := http.Get(baseURL + "/todos/" + )
+		// TODO: Check if the GET request was successful and print the new todo item
+		// TODO: Handle potential errors from the GET request
 	} else {
+		// Handle potential errors from the POST request
 		fmt.Printf("Failed to add a new todo\nStatus Code: %d\nError Details: %s\n", resp.StatusCode, string(body))
 	}
 }
